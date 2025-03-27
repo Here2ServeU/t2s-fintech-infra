@@ -1,8 +1,17 @@
-# .gitignore content
+# Local .terraform directories
+.terraform/
+
+# Terraform state files
 *.tfstate
 *.tfstate.backup
-.terraform/
+terraform.tfstate.*
+
+# Terraform lock file
 .terraform.lock.hcl
-*.zip
+
+# Sensitive files
 *.pem
-artifacts/*
+*.zip
+
+# Artifacts folder (if you want to ignore generated zips)
+artifacts/

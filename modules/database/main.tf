@@ -1,20 +1,20 @@
-# main.tf content
-# Aurora Multi-AZ Cluster
+# Create a subnet group for Aurora
 resource "aws_rds_subnet_group" "aurora" {
   name       = "aurora-subnet-group"
   subnet_ids = var.subnet_ids
 }
 
+# Aurora Multi-AZ Cluster
 resource "aws_rds_cluster" "aurora" {
-  cluster_identifier = "fintech-aurora-cluster"
-  engine             = "aurora-mysql"
-  master_username    = var.db_username
-  master_password    = var.db_password
-  database_name      = var.db_name
-  backup_retention_period = 7
-  preferred_backup_window = "03:00-04:00"
-  db_subnet_group_name    = aws_rds_subnet_group.aurora.name
-  vpc_security_group_ids  = [aws_security_group.db_sg.id]
+  cluster_identifier       = "fintech-aurora-cluster"
+  engine                   = "aurora-mysql"
+  master_username          = var.db_username
+  master_password          = var.db_password
+  database_name            = var.db_name
+  backup_retention_period  = 7
+  preferred_backup_window  = "03:00-04:00"
+  db_subnet_group_name     = aws_rds_subnet_group.aurora.name
+  vpc_security_group_ids   = [aws_security_group.db_sg.id]
 }
 
 resource "aws_rds_cluster_instance" "aurora_instances" {
@@ -26,7 +26,7 @@ resource "aws_rds_cluster_instance" "aurora_instances" {
   publicly_accessible = false
 }
 
-# DynamoDB Ledger Table
+# DynamoDB Table for ledger
 resource "aws_dynamodb_table" "ledger" {
   name         = "FintechLedger"
   billing_mode = "PAY_PER_REQUEST"
@@ -43,12 +43,13 @@ resource "aws_dynamodb_table" "ledger" {
   }
 }
 
-# DB Security Group
+# Security Group for DB access
 resource "aws_security_group" "db_sg" {
   name   = "db-sg"
   vpc_id = var.vpc_id
 
   ingress {
+    description = "Allow MySQL access"
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"

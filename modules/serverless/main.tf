@@ -1,4 +1,3 @@
-# main.tf content
 # IAM Role for Lambda
 resource "aws_iam_role" "lambda_exec" {
   name = "${var.lambda_function_name}-exec"

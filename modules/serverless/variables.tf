@@ -1,21 +1,30 @@
-# variables.tf content
 variable "lambda_function_name" {
-  default = "process-transactions"
+  description = "Lambda function name"
+  default     = "process-transactions"
 }
 
 variable "lambda_handler" {
-  default = "lambda_function.lambda_handler"
+  description = "Lambda handler"
+  default     = "lambda_function.lambda_handler"
 }
 
 variable "lambda_runtime" {
-  default = "python3.9"
+  description = "Lambda runtime"
+  default     = "python3.9"
 }
 
 variable "lambda_zip_path" {
-  description = "Path to zipped Lambda function"
+  description = "Path to the zipped Lambda package"
   type        = string
 }
 
 variable "api_gateway_name" {
-  default = "FintechTransactionAPI"
+  description = "API Gateway name"
+  default     = "FintechTransactionAPI"
+}
+
+variable "aws_region" {
+  description = "AWS region"
+  type        = string
+  default     = "us-east-1"
 }

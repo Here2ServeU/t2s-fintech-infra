@@ -1,2 +1,4 @@
-# variables.tf content
-variable "vpc_id" {}
+variable "vpc_id" {
+  description = "VPC ID for security resources"
+  type        = string
+}

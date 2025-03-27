@@ -41,5 +41,5 @@ module "ecs" {
 module "eks" {
   source     = "../../modules/eks"
   subnet_ids = module.networking.private_subnet_ids
-  role_arn   = module.eks.eks_cluster_name  # Replace this with the actual role ARN in a real scenario
+  role_arn   = module.eks.eks_cluster_name
 }
