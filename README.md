@@ -25,7 +25,7 @@ aws configure
 Provide:
 - AWS Access Key ID
 - AWS Secret Access Key
-- Default region: `us-east-1`
+- Default region: `us-east-1` (or any region where to deploy)
 - Output format: `json`
 
 ---
@@ -153,5 +153,5 @@ The `t2s-fintech-infra` setup is ideal for:
 
 The `t2s-fintech-infra` Terraform setup offers a modular, scalable, and secure foundation for building modern FinTech applications on AWS. Whether you're developing accounting, payroll, or other transaction-driven platforms, this infrastructure accelerates deployment with built-in compliance, automation, and observability.
 
-For feedback, support, or questions, please reach out to the project maintainer or contribute via GitHub.
+
 
