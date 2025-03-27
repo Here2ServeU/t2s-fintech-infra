@@ -1,0 +1,118 @@
+name: Terraform Enterprise CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  TF_VERSION: 1.5.7
+  AWS_REGION: us-east-1
+  WORKING_DIR: environments/dev
+  IMAGE_NAME: 123456789012.dkr.ecr.us-east-1.amazonaws.com/transaction-service:latest
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform:
+    name: Secure Terraform CI/CD
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ env.TF_VERSION }}
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: arn:aws:iam::123456789012:role/GitHubOIDCRole
+        aws-region: ${{ env.AWS_REGION }}
+
+    # Format & Validate
+    - name: Terraform Format
+      run: terraform fmt -check -recursive
+
+    - name: Terraform Init
+      working-directory: ${{ env.WORKING_DIR }}
+      run: terraform init
+
+    - name: Terraform Validate
+      working-directory: ${{ env.WORKING_DIR }}
+      run: terraform validate
+
+    # Security - IaC
+    - name: TFLint
+      run: |
+        curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+        tflint --init
+        tflint
+
+    - name: Checkov
+      uses: bridgecrewio/checkov-action@master
+      with:
+        directory: ${{ env.WORKING_DIR }}
+
+    - name: tfsec
+      uses: aquasecurity/tfsec-action@v1.0.0
+      with:
+        working_directory: ${{ env.WORKING_DIR }}
+
+    # Policy-as-Code
+    - name: Conftest (OPA)
+      run: |
+        wget https://github.com/open-policy-agent/conftest/releases/download/v0.47.0/conftest_0.47.0_Linux_x86_64.tar.gz
+        tar -xzf conftest_0.47.0_Linux_x86_64.tar.gz
+        sudo mv conftest /usr/local/bin
+        conftest test ${{ env.WORKING_DIR }}/main.tf
+
+    # Cost Estimation
+    - name: Infracost breakdown
+      uses: infracost/actions/setup@v2
+      with:
+        api-key: ${{ secrets.INFRACOST_API_KEY }}
+
+    - run: infracost breakdown --path=${{ env.WORKING_DIR }} --format=table
+
+    # Container Scan (Trivy)
+    - name: Trivy container image scan
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ env.IMAGE_NAME }}
+        format: table
+
+    # Plan & Apply
+    - name: Terraform Plan
+      working-directory: ${{ env.WORKING_DIR }}
+      run: terraform plan -out=tfplan
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main'
+      working-directory: ${{ env.WORKING_DIR }}
+      run: terraform apply -auto-approve tfplan
+
+    # Notify
+    - name: Setup Infracost
+      uses: infracost/actions/setup@v2
+      with:
+        api-key: ${{ secrets.INFRACOST_API_KEY }}
+    
+    - name: Infracost Breakdown
+      run: |
+        infracost breakdown \
+          --path=${{ env.WORKING_DIR }} \
+          --format=table \
+          --show-skipped
+    
+    - name: Infracost Comment PR (optional)
+      if: github.event_name == 'pull_request'
+      uses: infracost/actions/comment@v2
+      with:
+        path: infracost.json
+        behavior: update

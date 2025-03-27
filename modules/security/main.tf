@@ -37,3 +37,22 @@ resource "aws_wafv2_web_acl" "waf" {
 resource "aws_guardduty_detector" "detector" {
   enable = true
 }
+
+# Enable Amazon Inspector v2 (ECR, Lambda, EC2 scanning)
+resource "aws_inspector2_enabler" "ecr_scan" {
+  count         = var.enable_inspector ? 1 : 0
+  account_id    = var.account_id
+  resource_type = "ECR"
+}
+
+resource "aws_inspector2_enabler" "lambda_scan" {
+  count         = var.enable_inspector ? 1 : 0
+  account_id    = var.account_id
+  resource_type = "LAMBDA"
+}
+
+resource "aws_inspector2_enabler" "ec2_scan" {
+  count         = var.enable_inspector ? 1 : 0
+  account_id    = var.account_id
+  resource_type = "EC2"
+}

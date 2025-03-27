@@ -23,7 +23,7 @@ aws configure
 ```
 
 Provide:
-- AWS Access Key ID
+- AWS Access Key ID 
 - AWS Secret Access Key
 - Default region: `us-east-1` (or any region where to deploy)
 - Output format: `json`
