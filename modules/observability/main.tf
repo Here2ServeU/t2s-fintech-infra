@@ -34,8 +34,28 @@ resource "helm_release" "grafana" {
 
 # CloudWatch Logs enabled via EKS logging
 resource "aws_eks_cluster" "eks" {
-  name = var.cluster_name
-  enabled_cluster_log_types = var.enable_cloudwatch_logs ? [
+  name     = var.cluster_name
+  role_arn = var.role_arn
+
+  vpc_config {
+    subnet_ids = var.subnet_ids
+  }
+
+  enabled_cluster_log_types = local.eks_log_types
+}
+
+locals {
+  eks_log_types = var.enable_cloudwatch_logs ? [
     "api", "audit", "authenticator", "controllerManager", "scheduler"
   ] : []
+}
+
+variable "subnet_ids" {
+  description = "List of subnet IDs for the EKS cluster"
+  type        = list(string)
+}
+
+variable "role_arn" {
+  description = "IAM Role ARN for the EKS cluster"
+  type        = string
 }

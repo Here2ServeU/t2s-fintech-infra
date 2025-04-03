@@ -1,0 +1,12 @@
+{
+  "name": "node-frontend",
+  "version": "1.0.0",
+  "description": "Frontend served with Node.js and Express",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}

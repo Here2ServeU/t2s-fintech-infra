@@ -5,4 +5,4 @@ availability_zones = ["us-east-1a", "us-east-1b"]
 
 db_password         = "MySecureP@ssword123!"
 lambda_zip_path     = "../artifacts/transaction-lambda.zip"
-ecs_container_image = "123456789012.dkr.ecr.us-east-1.amazonaws.com/transaction-service:latest"
+ecs_container_image = "730335276920.dkr.ecr.us-east-1.amazonaws.com/transaction-service:latest"

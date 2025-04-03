@@ -21,6 +21,11 @@ variable "availability_zones" {
   default = ["us-east-1a", "us-east-1b"]
 }
 
+variable "account_id" {
+  description = "The AWS account ID"
+  type        = string
+}
+
 variable "db_password" {
   description = "Database master password"
   type        = string

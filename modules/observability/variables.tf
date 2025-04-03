@@ -13,3 +13,15 @@ variable "enable_cloudwatch_logs" {
   type        = bool
   default     = true
 }
+
+variable "enable_cloudwatch_logs" {
+  description = "Enable control plane logs for EKS"
+  type        = bool
+  default     = true
+}
+
+variable "enable_cloudwatch_logs" {
+  description = "Enable control plane logs for EKS"
+  type        = bool
+  default     = true
+}

@@ -11,8 +11,9 @@ module "networking" {
 }
 
 module "security" {
-  source = "../../modules/security"
-  vpc_id = module.networking.vpc_id
+  source    = "../../modules/security"
+  vpc_id    = module.networking.vpc_id
+  account_id = var.account_id
 }
 
 module "database" {

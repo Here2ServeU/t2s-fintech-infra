@@ -39,20 +39,12 @@ resource "aws_guardduty_detector" "detector" {
 }
 
 # Enable Amazon Inspector v2 (ECR, Lambda, EC2 scanning)
-resource "aws_inspector2_enabler" "ecr_scan" {
-  count         = var.enable_inspector ? 1 : 0
-  account_id    = var.account_id
-  resource_type = "ECR"
-}
+resource "null_resource" "enable_inspector2" {
+  count = var.enable_inspector ? 1 : 0
 
-resource "aws_inspector2_enabler" "lambda_scan" {
-  count         = var.enable_inspector ? 1 : 0
-  account_id    = var.account_id
-  resource_type = "LAMBDA"
-}
-
-resource "aws_inspector2_enabler" "ec2_scan" {
-  count         = var.enable_inspector ? 1 : 0
-  account_id    = var.account_id
-  resource_type = "EC2"
+  provisioner "local-exec" {
+    command = <<EOT
+      aws inspector2 enable --resource-types ECR LAMBDA EC2 --region ${var.region}
+    EOT
+  }
 }

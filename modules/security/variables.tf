@@ -13,3 +13,9 @@ variable "account_id" {
   description = "Your AWS account ID"
   type        = string
 }
+
+variable "region" {
+  description = "AWS region"
+  type        = string
+  default     = "us-east-1"
+}
