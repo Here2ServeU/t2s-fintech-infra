@@ -9,7 +9,7 @@ This directory contains two containerized applications used with the infrastruct
 
 Emmanuel Naweji
 
-- PhD
+- Ph.D. Candidate, National University (in progress)
 - Infrastructure, AI, DevOps, and Cloud Mentor
 
 ## Directory Layout

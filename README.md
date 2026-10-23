@@ -10,7 +10,7 @@ This repository defines modular infrastructure for a secure, scalable, and obser
 
 Emmanuel Naweji
 
-- PhD
+- Ph.D. Candidate, National University (in progress)
 - Infrastructure, AI, DevOps, and Cloud Mentor
 
 ## Repository Structure
